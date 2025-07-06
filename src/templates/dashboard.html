@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+
+{% block page_body %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Relatório de Desempenho das Métricas</h5>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover mt-3">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Provedor</th>
+                                <th>Serviço</th>
+                                <th>Métrica</th>
+                                <th>Valor</th>
+                                <th>Unidade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for report in metric_reports %}
+                                {% for metric in report.metrics %}
+                                <tr>
+                                    <td>{{ report.provider_name }}</td>
+                                    <td>{{ report.service_name }}</td>
+                                    <td>{{ metric.name }}</td>
+                                    <td>{{ metric.value }}</td>
+                                    <td>{{ metric.unit }}</td>
+                                </tr>
+                                {% endfor %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
