@@ -1,14 +1,15 @@
 import socket
 
-from core.collector import Dependency, collector
+from src.core.collector import DependencyCollector, collector
 
 _original_connect = socket.socket.connect
+
 
 def patch_socket():
     def traced_connect(self, address):
         try:
             host, port = address
-            dep = Dependency(
+            dep = DependencyCollector(
                 name=host,
                 type="socket",
                 address=host,
@@ -17,7 +18,7 @@ def patch_socket():
             )
             collector.detect(dep)
         except Exception as e:
-            print(f"Erro na interceptação de socket: {e}")
+            pass
         return _original_connect(self, address)
 
     socket.socket.connect = traced_connect

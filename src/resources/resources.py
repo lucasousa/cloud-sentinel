@@ -27,9 +27,14 @@ class Dashboard(Dropdown):
     class SLAReport(Link):
         label = "SLA Report"
         icon = "fas fa-chart-line"
-        url = "/admin/report/sla"
+        url = "/admin/sla/report"
 
-    resources = [Overview, SLAReport]
+    class DependencyList(Link):
+        label = "Dependências"
+        icon = "fas fa-plug"
+        url = "/admin/dependencies"
+
+    resources = [Overview, SLAReport, DependencyList]
 
 
 @app.register
@@ -100,7 +105,11 @@ class Content(Dropdown):
         model = Sla
         fields = [
             "id",
-            Field(name="metric", label="Métrica", input_=inputs.ForeignKey(model=MonitoredMetric)),
+            Field(
+                name="metric_id",
+                label="Métrica",
+                input_=inputs.ForeignKey(model=MonitoredMetric)
+            ),
             "min_threshold",
             "max_threshold",
             "is_active",
@@ -108,7 +117,7 @@ class Content(Dropdown):
         ]
 
     label = "Configuração"
-    icon = "fas fa-cog"
+    icon = "fas fa-cogs"
     resources = [SLAResource, MonitoredMetricResource]
 
 

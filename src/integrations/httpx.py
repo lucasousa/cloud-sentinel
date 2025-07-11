@@ -10,9 +10,11 @@ def patch_httpx():
             dependency_throughput,
         )
 
-        original_send = httpx.Client.send
+        original_send = httpx.AsyncClient.send
+        print("Patching httpx.AsyncClient.send...")
 
-        def send(self, request, **kwargs):
+        async def send(self, request, **kwargs):
+            print(f"HTTPX request: {request.method} {request.url}")
             host = request.url.host
             port = request.url.port or (443 if request.url.scheme == "https" else 80)
             dep = Dependency(
@@ -26,8 +28,9 @@ def patch_httpx():
             dependency_throughput.labels(name=host).inc()
             with dependency_response_time.labels(name=host).time():
                 with dependency_latency.labels(name=host).time():
-                    return original_send(self, request, **kwargs)
+                    return await original_send(self, request, **kwargs)
 
-        httpx.Client.send = send
+        httpx.AsyncClient.send = send
+
     except ImportError:
         pass

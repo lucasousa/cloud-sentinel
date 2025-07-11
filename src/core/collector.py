@@ -1,28 +1,31 @@
 from typing import List
 
 from prometheus_client import Counter, Gauge, Histogram, Summary
-from pydantic import BaseModel
 
-
-class Dependency(BaseModel):
-    name: str
-    type: str
-    address: str
-    port: int
-    source: str
+from src.models import Dependencies
 
 
 class DependencyCollector:
     def __init__(self):
-        self.dependencies: List[Dependency] = []
+        self.dependencies: List[Dependencies] = []  
 
-    def detect(self, dep: Dependency):
+    async def detect(self, dep: Dependencies):
+        print(f"Detectando dependência: {dep.name} ({dep.type}) - {dep.address}:{dep.port}")
         if not any(d.address == dep.address and d.port == dep.port for d in self.dependencies):
             self.dependencies.append(dep)
-            print(f"Nova dependência detectada: {dep}")
-            dependency_availability.labels(name=dep.name).set(1)
 
-    def list(self):
+            await Dependencies.get_or_create(
+                defaults={
+                    "name": dep.name,
+                    "type": dep.type,
+                    "source": dep.source,
+                    "is_active": True
+                },
+                address=dep.address,
+                port=dep.port,
+            )
+
+    async def list(self):
         return self.dependencies
 
 

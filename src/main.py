@@ -23,6 +23,7 @@ from starlette.status import (
 from tortoise.contrib.fastapi import register_tortoise
 
 from src import settings
+from src.integrations import patch_all_integrations
 from src.models.models import Admin
 from src.utils.providers import LoginProvider
 
@@ -31,6 +32,7 @@ from .constants import BASE_DIR
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    patch_all_integrations()
     r = redis.from_url(
         settings.REDIS_URL,
         decode_responses=True,
@@ -53,7 +55,6 @@ async def lifespan(app: FastAPI):
 
 def create_app():
     app = FastAPI(lifespan=lifespan)
-    print("Base directory:", BASE_DIR)
     app.mount(
         "/static",
         StaticFiles(directory=os.path.join(BASE_DIR, "static")),

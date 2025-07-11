@@ -5,12 +5,7 @@ def patch_pymongo():
     try:
         import pymongo
 
-        from core.collector import (
-            Dependency,
-            collector,
-            dependency_latency,
-            dependency_response_time,
-        )
+        from core.collector import Dependency, collector
 
         original_init = pymongo.MongoClient.__init__
 

@@ -25,7 +25,7 @@ class MonitoredMetric(Model):
     created_at = fields.DatetimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.name}"
+        return self.name
 
 
 class Sla(Model):
@@ -38,3 +38,35 @@ class Sla(Model):
 
     def __str__(self):
         return f"SLA: {self.name}"
+
+
+class Dependencies(Model):
+    id = fields.IntField(pk=True)
+    name = fields.CharField(max_length=100, unique=True, description="Name")
+    type = fields.CharField(max_length=50, description="Type", blank=True, null=True)
+    address = fields.CharField(max_length=200, description="Address", blank=True, null=True)
+    port = fields.IntField(description="Port", blank=True, null=True)
+    source = fields.CharField(max_length=100, description="Source", blank=True, null=True)
+    is_active = fields.BooleanField(default=True, description="Is active?")
+    created_at = fields.DatetimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+
+class SLAReport(Model):
+    id = fields.IntField(pk=True)
+    dependency = fields.ForeignKeyField(
+        "models.Dependencies",
+        related_name="sla_reports",
+        on_delete=fields.CASCADE
+    )
+    timestamp = fields.DatetimeField(auto_now_add=True)
+    availability = fields.FloatField(null=True)
+    latency = fields.FloatField(null=True)
+    response_time = fields.FloatField(null=True)
+    rtt = fields.FloatField(null=True)
+    throughput = fields.IntField(null=True)
+
+    class Meta:
+        table = "sla_report"

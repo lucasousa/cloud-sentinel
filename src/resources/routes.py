@@ -1,9 +1,10 @@
+import httpx
 from fastapi import Depends, Request
-from fastapi.responses import HTMLResponse
 from fastapi_admin.app import app
-from fastapi_admin.app import app as admin_app
-from fastapi_admin.depends import get_current_admin, get_resources
+from fastapi_admin.depends import get_resources
 from fastapi_admin.template import templates
+
+from src.models import Dependencies, SLAReport
 
 
 @app.get("/")
@@ -53,5 +54,43 @@ async def admin_dashboard(
             "request": request,
             "resources": resources,
             "metric_reports": metric_reports,
+        },
+    )
+
+
+@app.get("/dependencies")
+async def list_dependencies(
+    request: Request,
+    resources=Depends(get_resources),
+):
+    dependencies = await Dependencies.all().order_by("name")
+    return templates.TemplateResponse(
+        "dependencies.html",
+        context={
+            "request": request,
+            "resources": resources,
+            "dependencies": dependencies,
+            "resource_label": "Dependencies",
+            "page_pre_title": "list",
+            "page_title": "Dependencies List",
+        },
+    )
+
+
+@app.get("/sla/report")
+async def sla_report(
+    request: Request,
+    resources=Depends(get_resources),
+):
+    sla_reports = await SLAReport.all().prefetch_related("dependency").order_by("-timestamp")
+    return templates.TemplateResponse(
+        "sla_report.html",
+        context={
+            "request": request,
+            "resources": resources,
+            "sla_reports": sla_reports,
+            "resource_label": "SLA Report",
+            "page_pre_title": "list",
+            "page_title": "SLA Report List",
         },
     )
