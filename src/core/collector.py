@@ -1,7 +1,5 @@
 from typing import List
 
-from prometheus_client import Counter, Gauge, Histogram, Summary
-
 from src.models import Dependencies
 
 
@@ -30,9 +28,3 @@ class DependencyCollector:
 
 
 collector = DependencyCollector()
-
-dependency_availability = Gauge('dependency_availability', 'Disponibilidade das dependências', ['name'])
-dependency_response_time = Histogram('dependency_response_time_seconds', 'Tempo de resposta por dependência', ['name'])
-dependency_throughput = Counter('dependency_throughput_total', 'Número de chamadas por dependência', ['name'])
-dependency_latency = Summary('dependency_latency_seconds', 'Latência estimada por dependência', ['name'])
-dependency_rtt = Summary('dependency_rtt_seconds', 'Round-trip time estimado por dependência', ['name'])
