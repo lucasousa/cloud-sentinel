@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+
+{% block page_body %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Relatórios de SLA</h5>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover mt-3">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Dependência</th>
+                                <th>Disponibilidade</th>
+                                <th>Latência</th>
+                                <th>Tempo de Resposta</th>
+                                <th>RTT</th>
+                                <th>Vazão</th>
+                                <th>Data</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for report in sla_reports %}
+                                <tr>
+                                    <td>{{ report.dependency.name }}</td>
+                                    <td>{{ report.availability or '—' }}</td>
+                                    <td>{{ report.latency or '—' }}</td>
+                                    <td>{{ report.response_time or '—' }}</td>
+                                    <td>{{ report.rtt or '—' }}</td>
+                                    <td>{{ report.throughput or '—' }}</td>
+                                    <td>{{ report.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
