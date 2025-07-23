@@ -8,7 +8,6 @@ class DependencyCollector:
         self.dependencies: List[Dependencies] = []  
 
     async def detect(self, dep: Dependencies):
-        print(f"Detectando dependência: {dep.name} ({dep.type}) - {dep.address}:{dep.port}")
         if not any(d.address == dep.address and d.port == dep.port for d in self.dependencies):
             self.dependencies.append(dep)
 

@@ -42,7 +42,8 @@ class Sla(Model):
 
 class Dependencies(Model):
     id = fields.IntField(pk=True)
-    name = fields.CharField(max_length=100, unique=True, description="Name")
+    app_name = fields.CharField(max_length=100, description="Application name", blank=True, null=True)
+    name = fields.CharField(max_length=100, description="Name")
     type = fields.CharField(max_length=50, description="Type", blank=True, null=True)
     address = fields.CharField(max_length=200, description="Address", blank=True, null=True)
     port = fields.IntField(description="Port", blank=True, null=True)
@@ -56,6 +57,7 @@ class Dependencies(Model):
 
 class SLAReport(Model):
     id = fields.IntField(pk=True)
+    app_name = fields.CharField(max_length=100, description="Application name", blank=True, null=True)
     dependency = fields.ForeignKeyField(
         "models.Dependencies",
         related_name="sla_reports",

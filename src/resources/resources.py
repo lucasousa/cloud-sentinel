@@ -28,12 +28,20 @@ class Dashboard(Dropdown):
         label = "SLA Report"
         icon = "fas fa-chart-line"
         url = "/admin/sla/report"
+        filters = [
+            filters.Search(
+                name="metric__name",
+                label="Métrica",
+                search_mode="contains",
+                placeholder="Search for metric name",
+            ),
+        ]
 
     class DependencyList(Link):
         label = "Dependências"
         icon = "fas fa-plug"
         url = "/admin/dependencies"
-
+        
     resources = [Overview, SLAReport, DependencyList]
 
 
@@ -99,6 +107,14 @@ class Content(Dropdown):
             "is_active",
             "created_at",
         ]
+        filters = [
+            filters.Search(
+                name="name",
+                label="Name",
+                search_mode="contains",
+                placeholder="Search for metric name",
+            )        
+        ]
 
     class SLAResource(Model):
         label = "Definição de SLA"
@@ -115,6 +131,14 @@ class Content(Dropdown):
             "is_active",
             "created_at",
         ]
+        filters = [
+            filters.Search(
+                name="metric__name",
+                label="Métrica",
+                search_mode="contains",
+                placeholder="Search for metric name",
+            )
+        ]
 
     label = "Configuração"
     icon = "fas fa-cogs"
@@ -128,18 +152,3 @@ class GithubLink(Link):
     icon = "fab fa-github"
     target = "_blank"
 
-
-@app.register
-class DocumentationLink(Link):
-    label = "Documentation"
-    url = "https://fastapi-admin-docs.long2ice.io"
-    icon = "fas fa-file-code"
-    target = "_blank"
-
-
-@app.register
-class ProLink(Link):
-    label = "Pro Version"
-    url = "https://fastapi-admin-pro.long2ice.io/admin/login"
-    icon = "far fa-heart"
-    target = "_blank"

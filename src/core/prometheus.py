@@ -28,6 +28,9 @@ class PrometheusMetrics:
             'Round-trip time estimado por dependência',
             ['name']
         )
+        self.vm_cpu = Gauge("vm_cpu_usage_percent", "Uso de CPU da VM (em %)")
+        self.vm_memory = Gauge("vm_memory_usage_percent", "Uso de memória da VM (em %)")
+        self.vm_disk = Gauge("vm_disk_usage_percent", "Uso de disco da VM (em %)")
 
     def observe_success(self, name: str, duration: float):
         self._availability.labels(name=name).set(1)

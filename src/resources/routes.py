@@ -64,6 +64,7 @@ async def list_dependencies(
     resources=Depends(get_resources),
 ):
     dependencies = await Dependencies.all().order_by("name")
+
     return templates.TemplateResponse(
         "dependencies.html",
         context={

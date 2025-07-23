@@ -3,3 +3,22 @@ services:
     image: redis
     ports:
       - 6379:6379
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: cloud_sentinel
+      POSTGRES_PASSWORD: local_password
+      POSTGRES_DB: cloud_sentinel
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+    ports:
+      - 5432:5432
+  localstack:
+    image: localstack/localstack
+    container_name: localstack
+    restart: always
+    ports:
+      - '4566:4566'
+      - '4571:4571'
+    environment:
+      - SERVICES=kinesis

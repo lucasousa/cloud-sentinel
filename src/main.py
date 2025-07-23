@@ -32,7 +32,7 @@ from .constants import BASE_DIR
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    patch_all_integrations()
+    # patch_all_integrations()
     r = redis.from_url(
         settings.REDIS_URL,
         decode_responses=True,
