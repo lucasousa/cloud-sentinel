@@ -38,7 +38,7 @@ def patch_redis():
                 rtt=duration,
                 throughput=metrics.get_throughput(dep_name)
             )
-            print(f"[Redis] ✅ {command} {key} ({duration:.4f}s)")
+            #print(f"[Redis] ✅ {command} {key} ({duration:.4f}s)")
             return result
         except Exception as e:
             duration = time.monotonic() - start
@@ -51,6 +51,6 @@ def patch_redis():
                 rtt=duration,
                 throughput=metrics.get_throughput(dep_name)
             )
-            print(f"[Redis] ❌ {command} {key} FAILED ({duration:.4f}s): {e}")
+            #print(f"[Redis] ❌ {command} {key} FAILED ({duration:.4f}s): {e}")
 
     redis.Redis.execute_command = patched_execute_command
