@@ -41,7 +41,7 @@ class Dashboard(Dropdown):
         label = "Dependências"
         icon = "fas fa-plug"
         url = "/admin/dependencies"
-        
+     
     resources = [Overview, SLAReport, DependencyList]
 
 
@@ -124,7 +124,9 @@ class Content(Dropdown):
             Field(
                 name="metric_id",
                 label="Métrica",
-                input_=inputs.ForeignKey(model=MonitoredMetric)
+                input_=inputs.ForeignKey(
+                    model=MonitoredMetric
+                ),
             ),
             "min_threshold",
             "max_threshold",
@@ -151,4 +153,3 @@ class GithubLink(Link):
     url = "https://github.com/lucasousa/cloud-sentinel"
     icon = "fab fa-github"
     target = "_blank"
-

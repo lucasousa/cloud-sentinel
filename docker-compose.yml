@@ -13,6 +13,8 @@ services:
       POSTGRES_PORT: 5432
     ports:
       - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
   localstack:
     image: localstack/localstack
     container_name: localstack
@@ -22,3 +24,5 @@ services:
       - '4571:4571'
     environment:
       - SERVICES=kinesis
+volumes:
+  postgres_data:

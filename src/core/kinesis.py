@@ -24,7 +24,13 @@ class EventPublisher:
         self.timezone = pytz.timezone(timezone)
         self.queue = asyncio.Queue()
         self.executor = ThreadPoolExecutor()
-        self.client = boto3.client("kinesis", region_name=self.region_name, endpoint_url=KINESIS_ENDPOINT_URL)
+        self.client = boto3.client(
+            "kinesis", 
+            region_name=self.region_name,
+            endpoint_url=KINESIS_ENDPOINT_URL,
+            aws_access_key_id='temp',
+            aws_secret_access_key='temp'
+        )
         self._worker_task = None
 
     def start_worker(self):

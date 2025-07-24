@@ -4,6 +4,7 @@ from functools import wraps
 import redis.asyncio as redis
 
 from src.core.collector import collector
+from src.core.kinesis import EventPublisher
 from src.core.prometheus import metrics
 from src.models.models import Dependencies, SLAReport
 
@@ -30,27 +31,37 @@ def patch_redis():
             result = await original_execute_command(self, *args, **kwargs)
             duration = time.monotonic() - start
             metrics.observe_success(dep_name, duration)
-            await SLAReport.create(
-                dependency=await Dependencies.get(name=dep_name),
-                availability=metrics.get_availability(dep_name),
-                latency=duration,
-                response_time=duration,
-                rtt=duration,
-                throughput=metrics.get_throughput(dep_name)
+            # await SLAReport.create(
+            #     dependency=await Dependencies.get(name=dep_name),
+            #     availability=metrics.get_availability(dep_name),
+            #     latency=duration,
+            #     response_time=duration,
+            #     rtt=duration,
+            #     throughput=metrics.get_throughput(dep_name)
+            # )
+            print(f"[Redis] ✅ {command} {key} ({duration:.4f}s)")
+            event_publisher = EventPublisher()
+            event_publisher.start_worker()
+            await event_publisher.publish_event(
+                user_id="system",
+                platform="redis",
+                service="redis",
+                event_code="command_executed",
+                metadata={"command": command, "key": key},
+                data={"duration": duration}
             )
-            #print(f"[Redis] ✅ {command} {key} ({duration:.4f}s)")
             return result
         except Exception as e:
             duration = time.monotonic() - start
             metrics.observe_failure(dep_name, duration)
-            await SLAReport.create(
-                dependency=await Dependencies.get(name=dep_name),
-                availability=metrics.get_availability(dep_name),
-                latency=duration,
-                response_time=duration,
-                rtt=duration,
-                throughput=metrics.get_throughput(dep_name)
-            )
-            #print(f"[Redis] ❌ {command} {key} FAILED ({duration:.4f}s): {e}")
+            # await SLAReport.create(
+            #     dependency=1,#await Dependencies.get(name=dep_name),
+            #     availability=metrics.get_availability(dep_name),
+            #     latency=duration,
+            #     response_time=duration,
+            #     rtt=duration,
+            #     throughput=metrics.get_throughput(dep_name)
+            # )
+            print(f"[Redis] ❌ {command} {key} FAILED ({duration:.4f}s): {e}")
 
     redis.Redis.execute_command = patched_execute_command

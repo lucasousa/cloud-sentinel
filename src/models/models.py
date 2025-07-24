@@ -36,6 +36,10 @@ class Sla(Model):
     is_active = fields.BooleanField(default=True, description="Is the SLA active?")
     created_at = fields.DatetimeField(auto_now_add=True)
 
+    @property
+    def metric_name(self):
+        return self.metric.name if self.metric else None
+
     def __str__(self):
         return f"SLA: {self.name}"
 
