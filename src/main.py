@@ -90,7 +90,7 @@ def create_app():
                 }
             },
         },
-        generate_schemas=True,
+        generate_schemas=False,
     )
     return app
 
