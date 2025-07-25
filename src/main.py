@@ -98,4 +98,5 @@ def create_app():
 app_ = create_app()
 
 if __name__ == "__main__":
-    uvicorn.run("main:app_", reload=True)
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("src.main:app_", host="0.0.0.0", port=port, reload=True)
