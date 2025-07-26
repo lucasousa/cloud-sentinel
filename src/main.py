@@ -1,4 +1,5 @@
 import os
+import ssl
 from contextlib import asynccontextmanager
 
 import redis.asyncio as redis
@@ -33,10 +34,12 @@ from .constants import BASE_DIR
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # patch_all_integrations()
+    ssl_context = ssl.create_default_context()
     r = redis.from_url(
         settings.REDIS_URL,
         decode_responses=True,
         encoding="utf8",
+        ssl=ssl_context if settings.REDIS_URL.startswith("rediss://") else None,
     )
     await admin_app.configure(
         logo_url="https://preview.tabler.io/static/logo.svg",
@@ -90,7 +93,7 @@ def create_app():
                 }
             },
         },
-        generate_schemas=False,
+        generate_schemas=True,
     )
     return app
 
