@@ -39,7 +39,8 @@ async def lifespan(app: FastAPI):
         settings.REDIS_URL,
         decode_responses=True,
         encoding="utf8",
-        ssl=ssl_context if settings.REDIS_URL.startswith("rediss://") else None,
+        ssl=True if settings.REDIS_URL.startswith("rediss://") else None,
+        ssl_context=ssl_context if settings.REDIS_URL.startswith("rediss://") else None,
     )
     await admin_app.configure(
         logo_url="https://preview.tabler.io/static/logo.svg",
