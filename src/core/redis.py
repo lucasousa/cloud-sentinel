@@ -25,7 +25,7 @@ class RedisClient:
                 host=params.get("host", "localhost"),
                 port=params.get("port", 6379),
                 ssl=True,
-                ssl_ca_certs=self.get_ssl_context().get_ca_certs() if self.get_ssl_context() else None,
+                ssl_ca_certs=None,
             )
         return self.redis
 
