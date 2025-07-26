@@ -23,6 +23,7 @@ from starlette.status import (
 from tortoise.contrib.fastapi import register_tortoise
 
 from src import settings
+from src.core.redis import get_redis_client
 from src.integrations import patch_all_integrations
 from src.models.models import Admin
 from src.utils.providers import LoginProvider
@@ -33,11 +34,6 @@ from .constants import BASE_DIR
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # patch_all_integrations()
-    r = redis.from_url(
-        settings.REDIS_URL,
-        decode_responses=True,
-        encoding="utf8",
-    )
     await admin_app.configure(
         logo_url="https://preview.tabler.io/static/logo.svg",
         template_folders=[os.path.join(BASE_DIR, "templates")],
@@ -48,7 +44,7 @@ async def lifespan(app: FastAPI):
                 admin_model=Admin,
             )
         ],
-        redis=r,
+        redis=get_redis_client(),
     )
     yield
 
