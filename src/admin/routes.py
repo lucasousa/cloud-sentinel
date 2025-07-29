@@ -1,10 +1,10 @@
-import httpx
 from fastapi import Depends, Request
 from fastapi_admin.app import app
 from fastapi_admin.depends import get_resources
 from fastapi_admin.template import templates
 
-from src.models import Dependencies, SLAReport
+from src.admin.query import aggregate_by_time_slice
+from src.models import Dependencies, MonitoringAggregationTime
 
 
 @app.get("/")
@@ -83,7 +83,8 @@ async def sla_report(
     request: Request,
     resources=Depends(get_resources),
 ):
-    sla_reports = await SLAReport.all().prefetch_related("dependency").order_by("-timestamp")
+    time_slice = await MonitoringAggregationTime.first()
+    sla_reports = await aggregate_by_time_slice(minutes=time_slice.window_size if time_slice else 10)
     return templates.TemplateResponse(
         "sla_report.html",
         context={

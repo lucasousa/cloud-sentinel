@@ -7,8 +7,9 @@ from fastapi_admin.resources import Action, Dropdown, Field, Link, Model, Toolba
 from fastapi_admin.widgets import displays, filters, inputs
 from starlette.requests import Request
 
+from src.admin.utils import MetricNameDisplay
 from src.constants import BASE_DIR
-from src.models import Admin, MonitoredMetric, Sla
+from src.models import Admin, MonitoredMetric, MonitoringAggregationTime, Sla
 
 upload = FileUpload(uploads_dir=os.path.join(BASE_DIR, "static", "uploads"))
 
@@ -124,6 +125,7 @@ class Content(Dropdown):
             Field(
                 name="metric_id",
                 label="Métrica",
+                display=MetricNameDisplay(),
                 input_=inputs.ForeignKey(
                     model=MonitoredMetric
                 ),
@@ -142,9 +144,17 @@ class Content(Dropdown):
             )
         ]
 
+    class MonitoringAggregationTimeResource(Model):
+        label = "Tempo de Monitoramento"
+        model = MonitoringAggregationTime
+        fields = [
+            "id",
+            "window_size"
+        ]
+
     label = "Configuração"
     icon = "fas fa-cogs"
-    resources = [SLAResource, MonitoredMetricResource]
+    resources = [SLAResource, MonitoredMetricResource, MonitoringAggregationTimeResource]
 
 
 @app.register

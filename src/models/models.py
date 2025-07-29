@@ -73,6 +73,13 @@ class SLAReport(Model):
     response_time = fields.FloatField(null=True)
     rtt = fields.FloatField(null=True)
     throughput = fields.IntField(null=True)
+    cpu = fields.FloatField(null=True)
+    memory = fields.FloatField(null=True)
 
     class Meta:
         table = "sla_report"
+
+
+class MonitoringAggregationTime(Model):
+    id = fields.IntField(pk=True)
+    window_size = fields.IntField(description="Slice de tempo do monitoramento")

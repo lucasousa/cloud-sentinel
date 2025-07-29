@@ -33,14 +33,14 @@ from .constants import BASE_DIR
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # patch_all_integrations()
+    patch_all_integrations()
     await admin_app.configure(
-        logo_url="https://preview.tabler.io/static/logo.svg",
+        logo_url="/static/uploads/logo_cloud.svg",
         template_folders=[os.path.join(BASE_DIR, "templates")],
         favicon_url="https://raw.githubusercontent.com/fastapi-admin/fastapi-admin/dev/images/favicon.png",
         providers=[
             LoginProvider(
-                login_logo_url="https://preview.tabler.io/static/logo.svg",
+                login_logo_url="/static/uploads/logo_cloud.svg",
                 admin_model=Admin,
             )
         ],

@@ -30,21 +30,24 @@ class PrometheusMetrics:
         )
         self.vm_cpu = Gauge("vm_cpu_usage_percent", "Uso de CPU da VM (em %)")
         self.vm_memory = Gauge("vm_memory_usage_percent", "Uso de memória da VM (em %)")
-        self.vm_disk = Gauge("vm_disk_usage_percent", "Uso de disco da VM (em %)")
 
-    def observe_success(self, name: str, duration: float):
+    def observe_success(self, name: str, duration: float, cpu: float, memory: float):
         self._availability.labels(name=name).set(1)
         self._throughput.labels(name=name).inc()
         self._response_time.labels(name=name).observe(duration)
         self._latency.labels(name=name).observe(duration)
         self._rtt.labels(name=name).observe(duration)
+        self.vm_cpu.set(cpu)
+        self.vm_memory.set(memory)
 
-    def observe_failure(self, name: str, duration: float):
+    def observe_failure(self, name: str, duration: float, cpu: float, memory: float):
         self._availability.labels(name=name).set(0)
         self._throughput.labels(name=name).inc()
         self._response_time.labels(name=name).observe(duration)
         self._latency.labels(name=name).observe(duration)
         self._rtt.labels(name=name).observe(duration)
+        self.vm_cpu.set(cpu)
+        self.vm_memory.set(memory)
 
     def get_throughput(self, name: str) -> int:
         for sample in self._throughput.collect():

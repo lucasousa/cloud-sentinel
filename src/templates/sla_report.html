@@ -16,19 +16,23 @@
                                 <th>Tempo de Resposta</th>
                                 <th>RTT</th>
                                 <th>Vazão</th>
-                                <th>Data</th>
+                                <th>CPU</th>
+                                <th>Memória</th>
+                                <th>Timestamp</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for report in sla_reports %}
                                 <tr>
-                                    <td>{{ report.dependency.name }}</td>
+                                    <td>{{ report.dependency_name }}</td>
                                     <td>{{ report.availability or '0.0' }}</td>
-                                    <td>{{ "%.4f"|format(report.latency) if report.latency is not none else '—' }}</td>
-                                    <td>{{ "%.4f"|format(report.response_time) if report.response_time is not none else '—' }}</td>
-                                    <td>{{ "%.4f"|format(report.rtt) if report.rtt is not none else '—' }}</td>
-                                    <td>{{ "%.4f"|format(report.throughput) if report.throughput is not none else '—' }}</td>
-                                    <td>{{ report.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                    <td>{{ "%.3f"|format(report.latency) if report.latency is not none else '—' }}</td>
+                                    <td>{{ "%.3f"|format(report.response_time) if report.response_time is not none else '—' }}</td>
+                                    <td>{{ "%.3f"|format(report.rtt) if report.rtt is not none else '—' }}</td>
+                                    <td>{{ "%.2f"|format(report.throughput) if report.throughput is not none else '—' }}</td>
+                                    <td>{{ "%.2f"|format(report.cpu) if report.cpu is not none else '—' }}</td>
+                                    <td>{{ "%.2f"|format(report.memory) if report.memory is not none else '—' }}</td>
+                                    <td>{{ report.time_slice.strftime('%Y-%m-%d %H:%M:%S') }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
