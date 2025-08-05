@@ -24,14 +24,16 @@ async def _collect_vm_metrics_async():
     dep_name = "vm"
 
     try:
-        await Dependencies.get_or_create(
-            app_name=APPLICATION_NAME,
-            name=dep_name,
-            type="vm",
-            address=host,
-            port=0,
-            source=host,
-        )
+        dep = await Dependencies.filter(name=dep_name, address=host).first()
+        if not dep:
+            dep = await Dependencies.create(
+                app_name=APPLICATION_NAME,
+                name=dep_name,
+                type="vm",
+                address=host,
+                port=0,
+                source=host,
+            )
         start = time.monotonic()
 
         try:
