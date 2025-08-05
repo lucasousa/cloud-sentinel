@@ -63,7 +63,7 @@ async def _collect_vm_metrics_async():
             metrics.observe_failure(dep_name, duration, cpu, mem)
 
             await SLAReport.create(
-                dependency=await Dependencies.get(name=dep_name),
+                dependency=await Dependencies.get(name=dep_name, address=host),
                 availability=metrics.get_availability(dep_name),
                 latency=duration,
                 response_time=duration,
