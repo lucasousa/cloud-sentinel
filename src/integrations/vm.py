@@ -13,20 +13,13 @@ from src.settings import APPLICATION_NAME
 logger = logging.getLogger(__name__)
 
 
-def collect_vm_metrics_and_report():
-    loop = asyncio.get_event_loop()
-    loop.create_task(_collect_vm_metrics_async())
-    logger.info("Collecting vm metrics")
-
-
-async def _collect_vm_metrics_async():
+async def collect_vm_metrics_and_report():
     host = str(socket.gethostname())
     dep_name = "vm"
 
     try:
-        dep = await Dependencies.filter(name=dep_name, address=host).first()
-        if not dep:
-            dep = await Dependencies.create(
+        await collector.detect(
+            Dependencies(
                 app_name=APPLICATION_NAME,
                 name=dep_name,
                 type="vm",
@@ -34,6 +27,7 @@ async def _collect_vm_metrics_async():
                 port=0,
                 source=host,
             )
+        )
         start = time.monotonic()
 
         try:

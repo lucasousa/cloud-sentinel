@@ -33,7 +33,7 @@ from .constants import BASE_DIR
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    patch_all_integrations()
+    await patch_all_integrations()
     await admin_app.configure(
         logo_url="/static/uploads/logo_cloud.svg",
         template_folders=[os.path.join(BASE_DIR, "templates")],

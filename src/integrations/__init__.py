@@ -4,8 +4,8 @@ from .redis import patch_redis
 from .vm import collect_vm_metrics_and_report
 
 
-def patch_all_integrations():
+async def patch_all_integrations():
     patch_httpx()
-    collect_vm_metrics_and_report()
+    await collect_vm_metrics_and_report()
     patch_redis()
     patch_tortoise_postgres()
