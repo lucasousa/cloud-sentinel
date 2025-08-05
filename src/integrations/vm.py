@@ -20,7 +20,7 @@ def collect_vm_metrics_and_report():
 
 
 async def _collect_vm_metrics_async():
-    host = socket.gethostname()
+    host = str(socket.gethostname())
     dep_name = "vm"
 
     try:
@@ -42,7 +42,7 @@ async def _collect_vm_metrics_async():
             metrics.observe_success(dep_name, duration, cpu, mem)
 
             await SLAReport.create(
-                dependency=await Dependencies.get(name=dep_name),
+                dependency=await Dependencies.get(name=dep_name, address=host),
                 availability=metrics.get_availability(dep_name),
                 latency=duration,
                 response_time=duration,
