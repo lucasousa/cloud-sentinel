@@ -8,6 +8,8 @@ import boto3
 import pytz
 
 from src.settings import (
+    AWS_KEY,
+    AWS_SECRET,
     KINESIS_ENDPOINT_URL,
     KINESIS_EVENTS_STREAM_NAME,
     KINESIS_EVENTS_STREAM_REGION,
@@ -28,8 +30,8 @@ class EventPublisher:
             "kinesis", 
             region_name=self.region_name,
             endpoint_url=KINESIS_ENDPOINT_URL,
-            aws_access_key_id='temp',
-            aws_secret_access_key='temp'
+            aws_access_key_id=AWS_KEY,
+            aws_secret_access_key=AWS_SECRET
         )
         self._worker_task = None
 
@@ -37,15 +39,12 @@ class EventPublisher:
         if self._worker_task is None:
             self._worker_task = asyncio.create_task(self._worker())
 
-    async def publish_event(self, user_id: str, platform: str, service: str, event_code: str, metadata: dict = {}, data: dict = {},):
+    async def publish_event(self, user_id: str, event_code: str, data: dict = {}):
         now = datetime.now(self.timezone)
 
         event = {
             "user_id": user_id,
-            "platform": platform,
-            "service": service,
             "event_code": event_code,
-            "metadata": metadata,
             "data": data,
             "created_at": now.isoformat()
         }
