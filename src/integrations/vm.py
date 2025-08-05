@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import socket
 import time
 
@@ -9,14 +10,18 @@ from src.core.prometheus import metrics
 from src.models.models import Dependencies, SLAReport
 from src.settings import APPLICATION_NAME
 
+logger = logging.getLogger(__name__)
+
 
 def collect_vm_metrics_and_report():
-    asyncio.create_task(_collect_vm_metrics_async())
+    loop = asyncio.get_event_loop()
+    loop.create_task(_collect_vm_metrics_async())
+    logger.info("Collecting vm metrics")
 
 
 async def _collect_vm_metrics_async():
-    dep_name = "vm"
     host = socket.gethostname()
+    dep_name = "vm"
 
     try:
         dep = Dependencies(
@@ -25,7 +30,7 @@ async def _collect_vm_metrics_async():
             type="vm",
             address=host,
             port=0,
-            source="local",
+            source=host,
         )
 
         await collector.detect(dep)
