@@ -24,16 +24,14 @@ async def _collect_vm_metrics_async():
     dep_name = "vm"
 
     try:
-        dep = Dependencies(
+        await collector.detect(Dependencies(
             app_name=APPLICATION_NAME,
             name=dep_name,
             type="vm",
             address=host,
             port=0,
             source=host,
-        )
-
-        await collector.detect(dep)
+        ))
         start = time.monotonic()
 
         try:
