@@ -42,7 +42,7 @@ class Dashboard(Dropdown):
         label = "Dependências"
         icon = "fas fa-plug"
         url = "/admin/dependencies"
-     
+
     resources = [Overview, SLAReport, DependencyList]
 
 
@@ -114,7 +114,7 @@ class Content(Dropdown):
                 label="Name",
                 search_mode="contains",
                 placeholder="Search for metric name",
-            )        
+            )
         ]
 
     class SLAResource(Model):
@@ -126,9 +126,7 @@ class Content(Dropdown):
                 name="metric_id",
                 label="Métrica",
                 display=MetricNameDisplay(),
-                input_=inputs.ForeignKey(
-                    model=MonitoredMetric
-                ),
+                input_=inputs.ForeignKey(model=MonitoredMetric),
             ),
             "min_threshold",
             "max_threshold",
@@ -147,14 +145,15 @@ class Content(Dropdown):
     class MonitoringAggregationTimeResource(Model):
         label = "Tempo de Monitoramento"
         model = MonitoringAggregationTime
-        fields = [
-            "id",
-            "window_size"
-        ]
+        fields = ["id", "window_unit", "window_size"]
 
     label = "Configuração"
     icon = "fas fa-cogs"
-    resources = [SLAResource, MonitoredMetricResource, MonitoringAggregationTimeResource]
+    resources = [
+        SLAResource,
+        MonitoredMetricResource,
+        MonitoringAggregationTimeResource,
+    ]
 
 
 @app.register

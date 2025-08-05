@@ -23,18 +23,20 @@ def patch_tortoise_postgres():
 
         token = _in_patch.set(True)
         dep_name = "postgres"
-        db_address = f"{self.host}:{self.port}"
 
+        if hasattr(self, "host") and hasattr(self, "port"):
+            db_address = f"{self.host}:{self.port}"
+            await collector.detect(
+                Dependencies(
+                    name=dep_name,
+                    app_name=APPLICATION_NAME,
+                    type="postgres",
+                    address=db_address,
+                    port=self.port,
+                    source="tortoise_postgres",
+                )
+            )
         try:
-            await collector.detect(Dependencies(
-                name=dep_name,
-                app_name=APPLICATION_NAME,
-                type="postgres",
-                address=db_address,
-                port=self.port,
-                source="tortoise_postgres"
-            ))
-
             start = time.monotonic()
             result = await original_execute_query(self, query, *args, **kwargs)
             duration = time.monotonic() - start
@@ -50,7 +52,7 @@ def patch_tortoise_postgres():
                 rtt=duration,
                 throughput=metrics.get_throughput(dep_name),
                 cpu=cpu_percent,
-                memory=memory_percent
+                memory=memory_percent,
             )
             return result
 
@@ -68,9 +70,9 @@ def patch_tortoise_postgres():
                 rtt=duration,
                 throughput=metrics.get_throughput(dep_name),
                 cpu=cpu_percent,
-                memory=memory_percent
+                memory=memory_percent,
             )
-            raise
+            return result
 
         finally:
             _in_patch.reset(token)

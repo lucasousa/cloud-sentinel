@@ -25,7 +25,7 @@ async def _collect_vm_metrics_async():
             type="vm",
             address=host,
             port=0,
-            source="local"
+            source="local",
         )
 
         await collector.detect(dep)
@@ -46,7 +46,7 @@ async def _collect_vm_metrics_async():
                 rtt=duration,
                 throughput=metrics.get_throughput(dep_name),
                 cpu=cpu,
-                memory=mem
+                memory=mem,
             )
 
             print(f"[vm-local] ✅ CPU {cpu:.1f}% | MEM {mem:.1f}% | ({duration:.4f}s)")
@@ -65,7 +65,7 @@ async def _collect_vm_metrics_async():
                 rtt=duration,
                 throughput=metrics.get_throughput(dep_name),
                 cpu=cpu,
-                memory=mem
+                memory=mem,
             )
 
             print(f"[vm-local] ❌ Erro: {e} ({duration:.4f}s)")

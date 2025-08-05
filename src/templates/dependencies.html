@@ -12,10 +12,8 @@
                             <tr>
                                 <th>Name</th>
                                 <th>Application Name</th>
-                                <th>Type</th>
                                 <th>Address</th>
                                 <th>Port</th>
-                                <th>Source</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -23,10 +21,8 @@
                                 <tr>
                                     <td>{{ dep.name }}</td>
                                     <td>{{ dep.app_name }}</td>
-                                    <td>{{ dep.type }}</td>
-                                    <td>{{ dep.name }}</td>
+                                    <td>{{ dep.address }}</td>
                                     <td>{{ dep.port }}</td>
-                                    <td>{{ dep.source }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
