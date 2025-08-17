@@ -29,7 +29,7 @@ class EventPublisher:
         self.client = boto3.client(
             "kinesis", 
             region_name=self.region_name,
-            endpoint_url=KINESIS_ENDPOINT_URL,
+            # endpoint_url=KINESIS_ENDPOINT_URL,
             aws_access_key_id=AWS_KEY,
             aws_secret_access_key=AWS_SECRET
         )
