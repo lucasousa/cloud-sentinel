@@ -48,6 +48,7 @@ def patch_redis():
             metrics.observe_success(dep_name, duration, cpu, mem)
 
             data = dict(
+                app_name=APPLICATION_NAME,
                 dependence_name=dep_name,
                 dependence_address=f"{host}:{port}",
                 availability=metrics.get_availability(dep_name),
@@ -73,6 +74,7 @@ def patch_redis():
             metrics.observe_failure(dep_name, duration, cpu, mem)
 
             data = dict(
+                app_name=APPLICATION_NAME,
                 dependence_name=dep_name,
                 dependence_address=f"{host}:{port}",
                 availability=metrics.get_availability(dep_name),

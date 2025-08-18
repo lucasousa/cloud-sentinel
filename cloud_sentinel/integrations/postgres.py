@@ -50,6 +50,7 @@ def patch_tortoise_postgres():
 
             event_data = dict(
                 dependence_name=dep_name,
+                app_name=APPLICATION_NAME,
                 dependence_address=db_address,
                 availability=metrics.get_availability(dep_name),
                 latency=duration,
@@ -73,6 +74,7 @@ def patch_tortoise_postgres():
             metrics.observe_failure(dep_name, duration, cpu_percent, memory_percent)
 
             event_data = dict(
+                app_name=APPLICATION_NAME,
                 dependence_name=dep_name,
                 dependence_address=db_address,
                 availability=metrics.get_availability(dep_name),

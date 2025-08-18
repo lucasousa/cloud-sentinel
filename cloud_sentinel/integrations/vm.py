@@ -42,6 +42,7 @@ async def collect_vm_metrics_and_report():
             metrics.observe_success(dep_name, duration, cpu, mem)
 
             data = dict(
+                app_name=APPLICATION_NAME,
                 dependence_name=dep_name,
                 dependence_address=host,
                 availability=metrics.get_availability(dep_name),
@@ -67,6 +68,7 @@ async def collect_vm_metrics_and_report():
             metrics.observe_failure(dep_name, duration, cpu, mem)
 
             data = dict(
+                app_name=APPLICATION_NAME,
                 dependence_name=dep_name,
                 address=host,
                 availability=metrics.get_availability(dep_name),
