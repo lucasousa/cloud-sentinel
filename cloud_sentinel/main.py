@@ -5,7 +5,7 @@ import uvicorn
 from fastapi import FastAPI
 from starlette.responses import RedirectResponse
 
-from src.integrations import patch_all_integrations
+from cloud_sentinel.integrations import patch_all_integrations
 
 
 @asynccontextmanager

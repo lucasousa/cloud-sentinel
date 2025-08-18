@@ -7,7 +7,7 @@ from datetime import datetime
 import boto3
 import pytz
 
-from src.settings import (
+from cloud_sentinel.settings import (
     AWS_KEY,
     AWS_SECRET,
     KINESIS_ENDPOINT_URL,
@@ -27,11 +27,11 @@ class EventPublisher:
         self.queue = asyncio.Queue()
         self.executor = ThreadPoolExecutor()
         self.client = boto3.client(
-            "kinesis", 
+            "kinesis",
             region_name=self.region_name,
             # endpoint_url=KINESIS_ENDPOINT_URL,
             aws_access_key_id=AWS_KEY,
-            aws_secret_access_key=AWS_SECRET
+            aws_secret_access_key=AWS_SECRET,
         )
         self._worker_task = None
 
@@ -46,7 +46,7 @@ class EventPublisher:
             "user_id": user_id,
             "event_code": event_code,
             "data": data,
-            "created_at": now.isoformat()
+            "created_at": now.isoformat(),
         }
 
         await self.queue.put(event)
@@ -56,9 +56,7 @@ class EventPublisher:
             event = await self.queue.get()
             try:
                 await asyncio.get_event_loop().run_in_executor(
-                    self.executor,
-                    self._send_record,
-                    event
+                    self.executor, self._send_record, event
                 )
             except Exception as e:
                 logger.info(f"[EventPublisher] Failed to send event: {e}")
@@ -69,5 +67,5 @@ class EventPublisher:
         self.client.put_record(
             StreamName=self.stream_name,
             Data=json.dumps(event),
-            PartitionKey=str(event["user_id"])
+            PartitionKey=str(event["user_id"]),
         )
