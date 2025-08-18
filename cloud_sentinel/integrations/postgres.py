@@ -5,10 +5,10 @@ from functools import wraps
 import psutil
 from tortoise.backends.asyncpg.client import AsyncpgDBClient
 
-from src.core.enums import EventCode
-from src.core.kinesis import EventPublisher
-from src.core.prometheus import metrics
-from src.settings import APPLICATION_NAME
+from cloud_sentinel.core.enums import EventCode
+from cloud_sentinel.core.kinesis import EventPublisher
+from cloud_sentinel.core.prometheus import metrics
+from cloud_sentinel.settings import APPLICATION_NAME
 
 _in_patch = contextvars.ContextVar("in_patch", default=False)
 
@@ -38,7 +38,7 @@ def patch_tortoise_postgres():
                     address=db_address,
                     port=self.port,
                     source="tortoise_postgres",
-                )
+                ),
             )
         try:
             start = time.monotonic()
@@ -62,7 +62,7 @@ def patch_tortoise_postgres():
             await event_publisher.publish_event(
                 user_id=f"{dep_name}-{db_address}",
                 event_code=EventCode.SLA_DATA.value,
-                data=event_data
+                data=event_data,
             )
             return result
 
@@ -86,7 +86,7 @@ def patch_tortoise_postgres():
             await event_publisher.publish_event(
                 user_id=f"{dep_name}-{db_address}",
                 event_code=EventCode.SLA_DATA.value,
-                data=event_data
+                data=event_data,
             )
             return result
 

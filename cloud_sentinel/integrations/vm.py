@@ -4,10 +4,10 @@ import time
 
 import psutil
 
-from src.core.enums import EventCode
-from src.core.kinesis import EventPublisher
-from src.core.prometheus import metrics
-from src.settings import APPLICATION_NAME
+from cloud_sentinel.core.enums import EventCode
+from cloud_sentinel.core.kinesis import EventPublisher
+from cloud_sentinel.core.prometheus import metrics
+from cloud_sentinel.settings import APPLICATION_NAME
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ async def collect_vm_metrics_and_report():
         await event_publisher.publish_event(
             user_id=f"{dep_name}-{host}",
             event_code=EventCode.DEPENDENCE.value,
-            data=dependence_data
+            data=dependence_data,
         )
         start = time.monotonic()
 
@@ -55,7 +55,7 @@ async def collect_vm_metrics_and_report():
             await event_publisher.publish_event(
                 user_id=f"{dep_name}-{host}",
                 event_code=EventCode.SLA_DATA.value,
-                data=data
+                data=data,
             )
 
             print(f"[vm-local] ✅ CPU {cpu:.1f}% | MEM {mem:.1f}% | ({duration:.4f}s)")
@@ -80,7 +80,7 @@ async def collect_vm_metrics_and_report():
             await event_publisher.publish_event(
                 user_id=f"{dep_name}-{host}",
                 event_code=EventCode.SLA_DATA.value,
-                data=data
+                data=data,
             )
 
             print(f"[vm-local] ❌ Erro: {e} ({duration:.4f}s)")

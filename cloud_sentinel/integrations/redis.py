@@ -4,11 +4,11 @@ from functools import wraps
 import psutil
 import redis.asyncio as redis
 
-from src.core.collector import collector
-from src.core.kinesis import EventPublisher
-from src.core.prometheus import metrics
-from src.models.models import Dependencies, SLAReport
-from src.settings import APPLICATION_NAME
+from cloud_sentinel.core.collector import collector
+from cloud_sentinel.core.kinesis import EventPublisher
+from cloud_sentinel.core.prometheus import metrics
+from cloud_sentinel.models.models import Dependencies, SLAReport
+from cloud_sentinel.settings import APPLICATION_NAME
 
 
 def patch_redis():

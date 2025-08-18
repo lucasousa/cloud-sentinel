@@ -5,10 +5,10 @@ from functools import wraps
 import httpx
 import psutil
 
-from src.core.enums import EventCode
-from src.core.kinesis import EventPublisher
-from src.core.prometheus import metrics
-from src.settings import APPLICATION_NAME
+from cloud_sentinel.core.enums import EventCode
+from cloud_sentinel.core.kinesis import EventPublisher
+from cloud_sentinel.core.prometheus import metrics
+from cloud_sentinel.settings import APPLICATION_NAME
 
 _httpx_patch = contextvars.ContextVar("httpx_patch", default=False)
 
@@ -39,7 +39,7 @@ def patch_httpx():
                     address=address,
                     port=port,
                     source="httpx",
-                )
+                ),
             )
 
             start = time.monotonic()
@@ -64,7 +64,7 @@ def patch_httpx():
             await event_publisher.publish_event(
                 user_id=f"{dep_name}-{address}",
                 event_code=EventCode.SLA_DATA.value,
-                data=event_data
+                data=event_data,
             )
 
             return response
@@ -89,7 +89,7 @@ def patch_httpx():
             await event_publisher.publish_event(
                 user_id=f"{dep_name}-{address}",
                 event_code=EventCode.SLA_DATA.value,
-                data=event_data
+                data=event_data,
             )
             raise e
 
