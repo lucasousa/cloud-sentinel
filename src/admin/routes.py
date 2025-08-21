@@ -4,7 +4,11 @@ from fastapi_admin.app import app
 from fastapi_admin.depends import get_resources
 from fastapi_admin.template import templates
 
-from src.admin.query import aggregate_by_time_slice, aggregate_metrics
+from src.admin.query import (
+    aggregate_by_time_slice,
+    aggregate_metrics,
+    metrics_by_dependence,
+)
 from src.classifier.utils import classify_full_metrics, get_sla_values
 from src.models import Dependencies, MonitoringAggregationTime
 
@@ -48,41 +52,6 @@ async def home(
     )
 
 
-@app.get("/report")
-async def admin_dashboard(
-    request: Request,
-    resources=Depends(get_resources),
-):
-
-    # Simule ou consulte o relatório real aqui
-    metric_reports = [
-        {
-            "provider_name": "AWS",
-            "service_name": "EC2",
-            "metrics": [
-                {"name": "CPU", "value": 72.1, "unit": "%"},
-                {"name": "Memory", "value": 64.0, "unit": "%"},
-            ],
-        },
-        {
-            "provider_name": "Azure",
-            "service_name": "Functions",
-            "metrics": [
-                {"name": "Availability", "value": 0.999, "unit": ""},
-                {"name": "Response Time", "value": 1.23, "unit": "s"},
-            ],
-        },
-    ]
-    return templates.TemplateResponse(
-        "dashboard.html",
-        context={
-            "request": request,
-            "resources": resources,
-            "metric_reports": metric_reports,
-        },
-    )
-
-
 @app.get("/dependencies")
 async def list_dependencies(
     request: Request,
@@ -114,6 +83,29 @@ async def sla_report(
     )
     return templates.TemplateResponse(
         "sla_report.html",
+        context={
+            "request": request,
+            "resources": resources,
+            "sla_reports": sla_reports,
+            "resource_label": "SLA Report",
+            "page_pre_title": "list",
+            "page_title": "SLA Report List",
+        },
+    )
+
+
+@app.get("/sla/report_by_dependence/{dependence}", name="sla_report_by_dependence")
+async def report_by_dependence(
+    request: Request,
+    resources=Depends(get_resources),
+    dependence: str = ""
+):
+    sla_reports = await metrics_by_dependence(dependence=dependence)
+    for r in sla_reports:
+        if 'timestamp' in r and r['timestamp']:
+            r['timestamp'] = r['timestamp'].strftime('%Y-%m-%d %H:%M:%S')
+    return templates.TemplateResponse(
+        "sla_report_by_dependence.html",
         context={
             "request": request,
             "resources": resources,

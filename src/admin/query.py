@@ -50,3 +50,28 @@ async def aggregate_metrics():
 
         rows = await conn.execute_query_dict(query)
         return rows
+
+
+async def metrics_by_dependence(dependence: str):
+    async with in_transaction() as conn:
+        query = """
+        SELECT 
+            d.app_name as microservice,
+            d.name AS dependence_name,
+            s.timestamp,
+            s.latency,
+            s.response_time,
+            s.rtt,
+            s.availability,
+            s.cpu,
+            s.memory,
+            1 AS throughput
+        FROM sla_report s
+        JOIN dependencies d ON s.dependency_id = d.id
+        WHERE d.name = $1
+        ORDER BY s.timestamp
+        LIMIT 10
+        """
+
+        rows = await conn.execute_query_dict(query, [dependence])
+        return rows

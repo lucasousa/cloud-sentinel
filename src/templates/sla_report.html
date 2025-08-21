@@ -60,7 +60,11 @@
                             {% for report in sla_reports %}
                                 <tr>
                                     <td>{{ report.microservice }}</td>
-                                    <td>{{ report.dependency_name }}</td>
+                                    <td>
+                                        <a href="{{ url_for('sla_report_by_dependence', dependence=report.dependency_name) }}">
+                                            {{ report.dependency_name }}
+                                        </a>
+                                    </td>
                                     <td>{{ "%.0f"|format(report.availability * 100) or '0.0' }}%</td>
                                     <td>{{ "%.3f"|format(report.response_time)}}</td>
                                     <td>{{ "%.0f"|format(report.throughput)}}</td>
