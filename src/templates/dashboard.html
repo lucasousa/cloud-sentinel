@@ -1,8 +1,8 @@
 {% extends 'layout.html' %}
 
 {% block page_body %}
-<div class="row">
-    <div class="col-12">
+<div class="row d-flex justify-content-center">
+    <div class="col-12 col-md-8">
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Relatório de Desempenho das Métricas</h5>
@@ -10,8 +10,8 @@
                     <table class="table table-bordered table-hover mt-3">
                         <thead class="thead-dark">
                             <tr>
-                                <th>Microsserviço</th>
-                                <th>Dependência</th>
+                                <th>Microsservice</th>
+                                <th>Dependence</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
@@ -41,7 +41,7 @@
                                         {% elif r.status == 1 %}
                                             SLA parcialmente atendido
                                         {% elif r.status == 2 %}
-                                            SLA não atende
+                                            SLA não atendido
                                         {% else %}
                                             desconhecido
                                         {% endif %}
