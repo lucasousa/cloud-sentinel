@@ -1,6 +1,7 @@
 import asyncio
 import json
 import logging
+import random
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 
@@ -42,6 +43,9 @@ class EventPublisher:
     async def publish_event(self, user_id: str, event_code: str, data: dict = {}):
         now = datetime.now(self.timezone)
 
+        if int(event_code) == 2:
+            data = self.handle_data(data=data)
+
         event = {
             "user_id": user_id,
             "event_code": event_code,
@@ -69,3 +73,24 @@ class EventPublisher:
             Data=json.dumps(event),
             PartitionKey=str(event["user_id"]),
         )
+
+    def handle_data(data: dict) -> dict:
+        service = data.get("dependence_name")
+        if service == "postgres":
+            data.update(
+                {
+                    "cpu": random.uniform(74, 89),
+                    "memory": random.uniform(75, 95),
+                    "response_time": random.uniform(30, 35),
+                    "availability": random.randint(0, 1),
+                }
+            )
+        elif service == "redis":
+            data.update(
+                {
+                    "cpu": random.uniform(40, 70),
+                    "memory": random.uniform(75, 80),
+                    "response_time": random.uniform(15, 35),
+                }
+            )
+        return data
