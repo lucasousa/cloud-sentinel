@@ -74,7 +74,7 @@ class EventPublisher:
             PartitionKey=str(event["user_id"]),
         )
 
-    def handle_data(data: dict) -> dict:
+    def handle_data(self, data: dict) -> dict:
         service = data.get("dependence_name")
         if service == "postgres":
             data.update(
