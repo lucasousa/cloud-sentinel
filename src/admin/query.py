@@ -21,6 +21,7 @@ async def aggregate_by_time_slice(unit: str = "minute", interval: int = 10):
             COUNT(*) AS throughput
         FROM sla_report s
         JOIN dependencies d ON s.dependency_id = d.id
+        WHERE date(s.timestamp) = '2025-08-23'
         GROUP BY d.app_name, d.name, time_slice
         ORDER BY time_slice DESC, d.app_name, d.name;
         """
@@ -44,6 +45,7 @@ async def aggregate_metrics():
             COUNT(*) AS throughput
         FROM sla_report s
         JOIN dependencies d ON s.dependency_id = d.id
+        WHERE date(s.timestamp) = '2025-08-23'
         GROUP BY d.app_name, d.name
         ORDER BY d.name;
         """
@@ -68,6 +70,7 @@ async def metrics_by_dependence(dependence: str):
             1 AS throughput
         FROM sla_report s
         JOIN dependencies d ON s.dependency_id = d.id
+        WHERE date(s.timestamp) = '2025-08-23'
         WHERE d.name = $1
         ORDER BY s.timestamp
         LIMIT 10
